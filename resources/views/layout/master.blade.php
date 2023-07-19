@@ -5,16 +5,10 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <title>{{ $title ?? 'Sistem Reward' }}</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="{{ asset('assets/vendors/mdi/css/materialdesignicons.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/vendors/css/vendor.bundle.base.css') }}">
-    <!-- endinject -->
-    <!-- Plugin css for this page -->
-    <!-- End plugin css for this page -->
-    <!-- inject:css -->
-    <!-- endinject -->
-    <!-- Layout styles -->
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
@@ -22,7 +16,6 @@
 
 <body>
     <div class="container-scroller">
-
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row  d-print-none">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -76,7 +69,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                            @if (auth()->user()->akses_user == 'karyawan')
+                            {{-- @if (auth()->user()->akses_user == 'karyawan')
                                 <a class="dropdown-item"
                                     href="{{ url('/edit-karyawan/' . auth()->user()->karyawans->id) }}">
                                     <i class="mdi mdi-account-box me-2 text-success"></i> Profile </a>
@@ -84,7 +77,7 @@
                                 <a class="dropdown-item"
                                     href="{{ url('/edit-karyawan/' . auth()->user()->atasans->id) }}">
                                     <i class="mdi mdi-account-box me-2 text-success"></i> Profile </a>
-                            @endif
+                            @endif --}}
 
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ url('/change-password') }}">
