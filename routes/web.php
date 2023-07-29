@@ -93,7 +93,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/edit-nilai/{id}', [ProsesPenilaianController::class, 'edit']);
     Route::post('/update-nilai/{id}', [ProsesPenilaianController::class, 'update']);
     Route::get('/delete-nilai/{id}', [ProsesPenilaianController::class, 'destroy']);
-    Route::get('print-nilai', [ProsesPenilaianController::class, 'print']);
+    Route::post('cetak-nilai', [ProsesPenilaianController::class, 'index']);
 
     //user 
     Route::get('/daftar-users', [RangeRewardController::class, 'index']);
