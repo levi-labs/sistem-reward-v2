@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AktivasiController;
 use App\Http\Controllers\AtasanController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\KriteriaController;
@@ -67,7 +68,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/delete-pengajuan/{id}', [PengajuanController::class, 'destroy']);
     Route::get('/approve-pengajuan/{id}', [PengajuanController::class, 'approve']);
     Route::get('/reject-pengajuan/{id}', [PengajuanController::class, 'reject']);
+    Route::post('/print-pengajuan', [PengajuanController::class, 'index']);
+    Route::post('/print-approved', [PengajuanController::class, 'indexApproved']);
+    Route::post('/print-rejected', [PengajuanController::class, 'indexRejected']);
 
+    Route::get('aktivasi-enable/{id}', [AktivasiController::class, 'enableButton']);
+    Route::get('aktivasi-disable/{id}', [AktivasiController::class, 'disableButton']);
+
+    Route::post('periode-pengajuan', [PengajuanController::class, 'index']);
+    Route::post('periode-approved', [PengajuanController::class, 'indexApproved']);
+    Route::post('periode-rejected', [PengajuanController::class, 'indexRejected']);
+
+    Route::get('nilai-pengajuan/{id}', [ProsesPenilaianController::class, 'formNilaiApproved']);
 
     //kriteria
     Route::get('/daftar-kriteria-penilaian', [KriteriaController::class, 'index']);
@@ -93,7 +105,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/edit-nilai/{id}', [ProsesPenilaianController::class, 'edit']);
     Route::post('/update-nilai/{id}', [ProsesPenilaianController::class, 'update']);
     Route::get('/delete-nilai/{id}', [ProsesPenilaianController::class, 'destroy']);
-    Route::post('cetak-nilai', [ProsesPenilaianController::class, 'index']);
+    // Route::post('cetak-nilai', [ProsesPenilaianController::class, 'index']);
+    Route::post('periode-nilai', [ProsesPenilaianController::class, 'index']);
 
     //user 
     Route::get('/daftar-users', [RangeRewardController::class, 'index']);
@@ -108,7 +121,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update-password/{id}', [UserController::class, 'updatePassword']);
 
     Route::get('/report-penilaian', [ProsesPenilaianController::class, 'reportNilai']);
-    Route::get('/report-print', [ProsesPenilaianController::class, 'printNilai']);
+    Route::post('/report-print', [ProsesPenilaianController::class, 'printNilai']);
 });
 
 

@@ -15,30 +15,27 @@
                         </div>
                     @endif
 
-                    <form class="forms-sample mt-5" action="{{ url('/update-nilai/' . $nilai->id) }}" method="POST">
+                    <form class="forms-sample mt-5" action="{{ url('/post-nilai') }}" method="POST">
                         @csrf
 
-                        <div class="form-group ">
-                            <label class="col-sm-3 col-form-label">Nomor Pengajuan SS</label>
-                            <div class="col-sm-9">
-                                <select class="form-control" name="judul_pengajuan">
-                                    <option selected disabled>Pilih Nomor Pengajuan</option>
-                                    @foreach ($pengajuan as $item)
-                                        <option {{ $item->id == $nilai->pengajuan_id ? 'selected' : '' }}
-                                            value="{{ $item->id }}">{{ $item->judul_pengajuan }}</option>
-                                    @endforeach
-
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="npk">Nomor Pengajuan</label>
+                            <input type="hidden" class="form-control" id="karyawan_id" placeholder="" name="karyawan_id"
+                                value="{{ $pengajuan->karyawan_id }}" readonly>
+                            <input type="hidden" class="form-control" id="pengajuan_id" placeholder="" name="pengajuan_id"
+                                value="{{ $pengajuan->id }}" readonly>
+                            <input type="text" class="form-control" id="judul_pengajuan" placeholder=""
+                                name="judul_pengajuan" value="{{ $pengajuan->judul_pengajuan }}" readonly>
                         </div>
 
                         <div class="form-group ">
                             <label class="col-sm-3 col-form-label">Pengajuan SS</label>
+
                             <div class="col-sm-9">
                                 <select class="form-control" name="pengajuan">
                                     <option selected disabled>Pilih Nilai</option>
                                     @for ($i = 1; $i <= $paramsPengajuan; $i++)
-                                        <option {{ $nilai->pengajuan == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        <option>{{ $i }}</option>
                                     @endfor
 
                                 </select>
@@ -52,7 +49,7 @@
                                 <select class="form-control" name="meeting">
                                     <option selected disabled>Pilih Nilai</option>
                                     @for ($i = 1; $i <= $paramsMeeting; $i++)
-                                        <option {{ $nilai->meeting == $i ? 'selected' : '' }}>{{ $i }}</option>
+                                        <option>{{ $i }}</option>
                                     @endfor
 
                                 </select>
@@ -66,8 +63,7 @@
                                 <select class="form-control" name="kehadiran">
                                     <option selected disabled>Pilih Nilai</option>
                                     @for ($i = 1; $i <= $paramsKehadiran; $i++)
-                                        <option {{ $nilai->kehadiran == $i ? 'selected' : '' }}>{{ $i }}
-                                        </option>
+                                        <option>{{ $i }}</option>
                                     @endfor
 
                                 </select>
@@ -78,7 +74,7 @@
 
 
                         <button type="submit" class="btn btn-gradient-primary me-2">Submit</button>
-                        <a href="{{ '/daftar-proses-nilai' }}" class="btn btn-light">Cancel</a>
+                        <a href="{{ url('daftar-proses-nilai') }}" class="btn btn-light">Cancel</a>
                     </form>
 
 

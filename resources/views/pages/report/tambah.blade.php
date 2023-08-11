@@ -17,8 +17,8 @@
 
 
 
-                    <form class="forms-sample mt-5" action="{{ url('/report-print') }}" method="GET">
-                        {{-- @csrf --}}
+                    <form class="forms-sample mt-5" action="{{ url('/report-print') }}" method="post" target="_blank">
+                        @csrf
                         <div class="form-group">
                             <label for="npk">Dari Tanggal</label>
                             <input type="date" class="form-control" placeholder="<40" name="dari">
@@ -45,6 +45,7 @@
         @media print {
             .the-kop {
                 display: block;
+                margin: auto !important;
 
             }
 

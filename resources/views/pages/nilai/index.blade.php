@@ -1,6 +1,6 @@
 @extends('layout.master')
 @section('content')
-    <div class="col-lg-12 grid-margin stretch-card ">
+    <div class="col-md-12  ">
         <div class="card">
             <div class="card-body">
                 <h4 class="card-title d-print-none">{{ $title }}</h4>
@@ -17,23 +17,29 @@
                 {{-- <p class="card-description"> Add class <code>.table-hover</code>
                 </p> --}}
                 <div class="row justify-content-between">
-                    <div class="col-md-7 mb-3 d-print-none">
-                        <a href="{{ url('/tambah-nilai') }}" class="btn btn-primary btn-sm ">Tambah</a>
+                    <div class="col-md-6 mb-3 d-print-none">
+                        {{-- <a href="{{ url('/tambah-nilai') }}" class="btn btn-primary btn-sm ">Tambah</a> --}}
 
-                        <button onclick="window.print()" class="btn btn-secondary btn-sm">Print</button>
+                        {{-- <button onclick="window.print()" class="btn btn-secondary btn-sm">Print</button> --}}
                     </div>
-                    <div class="col-md-5 d-print-none text-right">
-                        <form action="{{ url('cetak-nilai') }}" method="POST">
-                            @csrf
-                            <label for="npk">Dari</label>
-                            <input type="date" name="dari">
+                    <div class="col-md-6 d-print-none text-right">
+                        <div class="row justify-content-end">
+                            <div class="col-6">
+                                <form action="{{ url('periode-nilai') }}" method="POST" autocomplete="off">
+                                    @csrf
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control form-control-sm month" id="tgl"
+                                                name="periode">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-sm btn-gradient-primary" type="submit">Cari</button>
+                                            </div>
+                                        </div>
+                                    </div>
 
-
-                            <label for="npk">Sampai</label>
-                            <input type="date" name="sampai">
-                            <button type="submit" class="btn btn-primary btn-sm">Cari</button>
-                        </form>
-
+                                </form>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -41,6 +47,10 @@
                 <style>
                     .the-kop {
                         display: none;
+                    }
+
+                    .table .table-bordered {
+                        font-size: 11px !important;
                     }
 
                     @media print {
@@ -152,8 +162,9 @@
 
                                 <td class="d-print-none">
 
-                                    <a href="{{ url('edit-nilai/' . $dt->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    <a href="{{ url('delete-nilai/' . $dt->id) }}" class="btn btn-danger btn-sm"
+                                    <a href="{{ url('edit-nilai/' . $dt->id) }}"
+                                        class="btn btn-warning btn-sm">Edit</a><br>
+                                    <a href="{{ url('delete-nilai/' . $dt->id) }}" class="btn btn-danger btn-sm mt-1"
                                         onclick="javascript:return confirm('yakin ingin menghapus data ini?')">Hapus</a>
                                 </td>
 
@@ -194,4 +205,20 @@
             </div>
         </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/2.3.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+        $('document').ready(function($) {
+            $(function() {
+                $('#tgl').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    format: "mm-yyyy",
+                    startView: "months",
+                    minViewMode: "months"
+                });
+            });
+        });
+    </script>
 @endsection

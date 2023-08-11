@@ -10,12 +10,74 @@
         integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous"> --}}
         <title>Document</title>
         <style>
-            body {
-                font-family: Arial, sans-serif;
+            @media print {
+                button.btn {
+                    display: none;
+                    margin: 5px 5px;
+                }
+
+                @page {
+                    size: F4 landscape;
+                    margin: 10%;
+                }
             }
 
-            table.my-kop {
+            button.btn {
+                margin-bottom: 5px;
+
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                width: 100%;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .my-logo {
+                position: absolute;
+                float: left;
+                margin-left: 10%;
+            }
+
+            .the-kop {
+                margin: auto;
+                width: 100%;
+            }
+
+            table tr td {
                 font-size: 11px;
+            }
+
+            table tr .text {
+                text-align: right;
+            }
+
+            table.table,
+            .table th,
+            .table td {
+                border: solid black 1px;
+                border-collapse: collapse;
+            }
+
+            table.table {
+                width: 100%;
+
+            }
+
+            .table-print {
+                margin: auto;
+                width: 90%;
+
+                padding: 1px;
+            }
+
+            .isi {
+                margin: auto;
+                width: 100%;
+            }
+
+            .isi td {
+                padding: 5px;
             }
         </style>
     </head>
@@ -51,13 +113,13 @@
             <hr style="border-top: 2px solid black; margin-top:-7px;">
             <br>
 
-            <div class="isi">
-                @yield('surat')
-            </div>
 
 
         </center>
 
+        <div class="isi">
+            @yield('surat')
+        </div>
 
 
 

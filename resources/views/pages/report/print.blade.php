@@ -99,9 +99,9 @@
     </div>
 </body>
 <Script>
-    document.addEventListener('DOMContentLoaded', function() {
-        window.print();
-    });
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     window.print();
+    // });
 </Script>
 
 </html>

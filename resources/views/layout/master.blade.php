@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}" />
+    {{-- <link href="https://netdna.bootstrapcdn.com/bootstrap/2.3.2/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.2.0/css/datepicker.min.css"
+        rel="stylesheet">
 </head>
 
 <body>
@@ -28,18 +31,36 @@
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
                     <span class="mdi mdi-menu"></span>
                 </button>
-                {{-- <div class="search-field d-none d-md-block">
-                    <form class="d-flex align-items-center h-100" action="#">
-                        <div class="input-group">
-                            <div class="input-group-prepend bg-transparent">
-                                <i class="input-group-text border-0 mdi mdi-magnify"></i>
-                            </div>
-                            <input type="text" class="form-control bg-transparent border-0"
-                                placeholder="Search projects">
+                @if (auth()->user()->akses_user == 'atasan')
+                    @php
+                        $cekaktivasi = \App\Models\Aktivasi::where('id', 1)->first();
+                    @endphp
+                    @if ($cekaktivasi->status_aktif == 'enable')
+                        <a href="{{ url('aktivasi-disable/' . $cekaktivasi->id) }}"
+                            class="btn btn-info btn-sm align-self-center">NonAktifkan Pengajuan</a>
+                    @elseif($cekaktivasi->status_aktif == 'disable')
+                        <a href="{{ url('aktivasi-enable/' . $cekaktivasi->id) }}"
+                            class="btn btn-info btn-sm align-self-center">Aktifkan Pengajuan</a>
+                    @endif
+
+                @endif
+                @if (session('aktifbutton'))
+                    <div class="row mt-2 mx-4">
+                        <div class="alert alert-success align-self-center">
+                            <span> {{ session('aktifbutton') }}</span>
+
                         </div>
-                    </form>
-                </div> --}}
+                    </div>
+                @endif
+
+
+
                 <ul class="navbar-nav navbar-nav-right">
+                    {{-- <label class="form-check-label me-5" for="flexSwitchCheckDefault">Pengajuan</label>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    </div> --}}
+
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link dropdown-toggle" id="profileDropdown" href="#"
                             data-bs-toggle="dropdown" aria-expanded="false">

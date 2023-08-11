@@ -14,6 +14,11 @@
 
                         </div>
                     @endif
+                    @if (session('exist'))
+                        <div class="alert alert-warning">
+                            <span>{{ session('exist') }}</span>
+                        </div>
+                    @endif
 
                     <form class="forms-sample mt-5" action="{{ url('/post-pengajuan') }}" method="POST">
                         @csrf

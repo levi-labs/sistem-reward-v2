@@ -13,37 +13,120 @@ class PengajuanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+          $dari = $request->dari;
+          $sampai = $request->sampai;
+          $findmonth = Pengajuan::whereMonth('tanggal_pengajuan', 06)->get();
+          $month = $request->periode;
+          $sample = explode('-', $month);
+  
+        
         if (auth()->user()->akses_user == 'karyawan') {
               $id     = auth()->user()->karyawans->id;
               $title  = 'Daftar Pengajuan';
               $data   = Pengajuan::where('karyawan_id',$id)->where('status_pengajuan', 'PENDING')->get();
+            
+              if (isset($month)) {
+                   $data   = Pengajuan::where('karyawan_id',$id)
+                            ->where('status_pengajuan', 'PENDING')
+                            ->whereMonth('tanggal_pengajuan',  $sample[0])
+                            ->whereYear('tanggal_pengajuan', $sample[1])
+                            ->get();
+        
+                  return view('pages.pengajuan.index', ['title' => $title, 'data' => $data]);
+              }
         // dd($data);
               return view('pages.pengajuan.index', ['title' => $title, 'data' => $data]);
         }else{
             //   $id     = auth()->user()->atasans->id;
               $title  = 'Daftar Pengajuan';
-              $data   = Pengajuan::all();
+              $data   = Pengajuan::where('status_pengajuan','PENDING')->get();
+              if (isset($month)) {
+                  $data   = Pengajuan::where('status_pengajuan', 'PENDING')
+                            ->whereMonth('tanggal_pengajuan',  $sample[0])
+                            ->whereYear('tanggal_pengajuan', $sample[1])
+                            ->get();
+                 return view('pages.pengajuan.index', ['title' => $title, 'data' => $data]);
+              }
 
               return view('pages.pengajuan.index', ['title' => $title, 'data' => $data]);
         }
      
     }
 
-    public function indexApproved(){
+    public function indexApproved(Request $request){
         $title = 'Daftar Approved';
-        $data = Pengajuan::where('status_pengajuan', 'APPROVED')->get();
+        $dari = $request->dari;
+        $sampai = $request->sampai;
+        $month = $request->periode;
+        $sample = explode('-', $month);
 
-
-        return view('pages.pengajuan.approved', ['title' => $title, 'data' => $data]);
+        if (auth()->user()->akses_user == 'karyawan') {
+            $id     = auth()->user()->karyawans->id;
+            $data = Pengajuan::where('karyawan_id', $id)
+                            ->where('status_pengajuan', 'APPROVED')
+                            ->get();
+          if (isset($month)) {
+            $data = Pengajuan::where('status_pengajuan', 'APPROVED')
+                    ->where('karyawan_id', $id)
+                    ->whereMonth('tanggal_pengajuan',  $sample[0])
+                    ->whereYear('tanggal_pengajuan', $sample[1])
+                    ->get();
+              
+               return view('pages.pengajuan.approved', ['title' => $title, 'data' => $data]);
+          }
+          return view('pages.pengajuan.approved', ['title' => $title, 'data' => $data]);
+        }elseif (auth()->user()->akses_user == 'atasan') {
+            $data = Pengajuan::where('status_pengajuan', 'APPROVED')->get();
+            if (isset($month)) {
+                 $data = Pengajuan::where('status_pengajuan', 'APPROVED')
+                    ->whereMonth('tanggal_pengajuan',  $sample[0])
+                    ->whereYear('tanggal_pengajuan', $sample[1])
+                    ->get();
+                  
+                return view('pages.pengajuan.approved', ['title' => $title, 'data' => $data]);
+            }
+           return view('pages.pengajuan.approved', ['title' => $title, 'data' => $data]);
+        }
+        
     }
 
-    public function indexRejected(){
-        $title = 'Daftar Approved';
-        $data = Pengajuan::where('status_pengajuan', 'REJECTED')->get();
+    public function indexRejected(Request $request){
+        $title = 'Daftar Rejected';
+     
+        $dari = $request->dari;
+        $sampai = $request->sampai;
+        $month = $request->periode;
+        $sample = explode('-', $month);
 
-        return view('pages.pengajuan.rejected', ['title' => $title, 'data' => $data]);
+        if (auth()->user()->akses_user == 'karyawan') {
+            $id     = auth()->user()->karyawans->id;
+            $data = Pengajuan::where('karyawan_id', $id)
+                            ->where('status_pengajuan', 'REJECTED')->get();
+          if (isset($month)) {
+            $data = Pengajuan::where('status_pengajuan', 'REJECTED')
+                    ->where('karyawan_id', $id)
+                    ->whereMonth('tanggal_pengajuan',  $sample[0])
+                    ->whereYear('tanggal_pengajuan', $sample[1])
+                    ->get();
+
+            return view('pages.pengajuan.rejected', ['title' => $title, 'data' => $data]);
+          }
+               return view('pages.pengajuan.rejected', ['title' => $title, 'data' => $data]);
+        }elseif (auth()->user()->akses_user == 'atasan') {
+            $data = Pengajuan::where('status_pengajuan', 'REJECTED')->get();
+            if (isset($month)) {
+                 $data = Pengajuan::where('status_pengajuan', 'REJECTED')
+                                ->whereMonth('tanggal_pengajuan',  $sample[0])
+                                ->whereYear('tanggal_pengajuan', $sample[1])
+                                ->get();
+                
+                return view('pages.pengajuan.rejected', ['title' => $title, 'data' => $data]);
+            }
+              return view('pages.pengajuan.rejected', ['title' => $title, 'data' => $data]);
+        }
+   
     }
 
     public function approve($id){
@@ -92,19 +175,31 @@ class PengajuanController extends Controller
             'kondisi_sesudah'   => 'required'
         ]);
         try {
-         $pengajuan                     = new Pengajuan();
-         $pengajuan->nama               = auth()->user()->karyawans->nama;
-         $pengajuan->npk                = auth()->user()->karyawans->npk;
-         $pengajuan->karyawan_id        = auth()->user()->karyawans->id;
-         $pengajuan->status_karyawan    = $request->status_karyawan;
-         $pengajuan->tanggal_pengajuan  = $request->tanggal_pengajuan;
-         $pengajuan->judul_pengajuan    = $pengajuan->getSs();
-         $pengajuan->kondisi_sebelum    = $request->kondisi_sebelum;
-         $pengajuan->kondisi_sesudah    = $request->kondisi_sesudah;
-         $pengajuan->status_pengajuan   = 'PENDING';
-         $pengajuan->save();
+            $time = $request->tanggal_pengajuan;
+            $expl = explode('-',$time);
+  
+            $find = Pengajuan::where('npk', auth()->user()->karyawans->npk)
+                    ->whereMonth('tanggal_pengajuan', $expl[1])
+                    ->whereYear('tanggal_pengajuan', $expl[0])
+                    ->count();
+           if ($find >= 1) {
+                return back()->with('exist', 'Pengajuan pada Periode tersebut sudah ada...!');
+           }elseif($find == 0){
+                $pengajuan                     = new Pengajuan();
+                $pengajuan->nama               = auth()->user()->karyawans->nama;
+                $pengajuan->npk                = auth()->user()->karyawans->npk;
+                $pengajuan->karyawan_id        = auth()->user()->karyawans->id;
+                $pengajuan->status_karyawan    = $request->status_karyawan;
+                $pengajuan->tanggal_pengajuan  = $request->tanggal_pengajuan;
+                $pengajuan->judul_pengajuan    = $pengajuan->getSs();
+                $pengajuan->kondisi_sebelum    = $request->kondisi_sebelum;
+                $pengajuan->kondisi_sesudah    = $request->kondisi_sesudah;
+                $pengajuan->status_pengajuan   = 'PENDING';
+                $pengajuan->save();
 
-         return redirect('/daftar-pengajuan')->with('success' ,'Pengajuan Berhasil dibuat...!');
+                return redirect('/daftar-pengajuan')->with('success' ,'Pengajuan Berhasil dibuat...!');
+           }
+        
         } catch (\Exception $e) {
         
             return redirect('/daftar-pengajuan')->with('failed' ,$e->getMessage());

@@ -20,22 +20,53 @@ class ProsesPenilaianController extends Controller
     public function index(Request $request)
     {
         $title = 'Daftar Hasil Penilaian ';
-        if (isset($request->dari) && isset($request->sampai)) {
-            $data = Nilai::where('tanggal', '>=', $request->dari)
-                ->where('tanggal', '<=', $request->sampai)
+        $time = $request->periode;
+        $expl = explode('-',$time);
+        if (isset($time)) {
+            $data = Nilai::whereMonth('tanggal',$expl[0])
+                ->whereYear('tanggal', $expl[1])
                 ->get();
-            if ($data->count() > 0) {
-                $title2 = 'Data ditemukan';
-                return view('pages.nilai.index', ['data' => $data, 'title' => $title, 'title2' => $title2]);
-            } else {
-                $title2 = 'Data Tidak ditemukan';
-                return view('pages.nilai.index', ['data' => $data, 'title' => $title, 'title2' => $title2]);
-            }
+                  return view('pages.nilai.index', ['data' => $data, 'title' => $title,]);
+            // if ($data->count() > 0) {
+            //     $title2 = 'Data ditemukan';
+            //     return view('pages.nilai.index', ['data' => $data, 'title' => $title, 'title2' => $title2]);
+            // } else {
+            //     $title2 = 'Data Tidak ditemukan';
+            //     return view('pages.nilai.index', ['data' => $data, 'title' => $title, 'title2' => $title2]);
+            // }
         } else {
 
             $data = Nilai::all();
 
             return view('pages.nilai.index', ['title' => $title, 'data' => $data]);
+        }
+    }
+    public function formNilaiApproved($id){
+        try {
+            $title = 'Form Proses Penilaian';
+            $pengajuan = Pengajuan::where('id', $id)->first();
+            $nilaiPengajuan = Kriteria::where('id', '1')->first();
+            $nilaiMeeting = Kriteria::where('id', '2')->first();
+            $nilaiKehadiran = Kriteria::where('id', '3')->first();
+            $np =  $nilaiPengajuan->range_nilai;
+            $nm =  $nilaiMeeting->range_nilai;
+            $nk =  $nilaiKehadiran->range_nilai;
+
+
+            $paramsPengajuan    = $this->getParamsKriteria($np);
+            $paramsMeeting      = $this->getParamsKriteria($nm);
+            $paramsKehadiran    = $this->getParamsKriteria($nk);
+
+
+            return view('pages.nilai.nilaiapproved', [
+                'title'             => $title,
+                'pengajuan'         => $pengajuan,
+                'paramsPengajuan'   => $paramsPengajuan,
+                'paramsMeeting'     => $paramsMeeting,
+                'paramsKehadiran'   => $paramsKehadiran
+            ]);
+        } catch (\Exception $e) {
+            return redirect('daftar-proses-nilai')->with('failed', $e->getMessage());
         }
     }
     public function reportNilai(Request $request)
@@ -66,9 +97,7 @@ class ProsesPenilaianController extends Controller
                     // ->whereBetween('tanggal',[$dari, $sampai])
                     ->get();
 
-                // dd($data);
-
-                return view('pages.report.tambah', ['title' => $title, 'data' => $data]);
+                return view('pages.report.cetak', ['title' => $title, 'data' => $data, 'dari' => $dari, 'sampai' => $sampai]);
             } elseif (!isset($dari) || !isset($sampai)) {
                 return back()->with('failed', 'Data Nilai Tidak ditemukan...!');
             }
@@ -117,6 +146,7 @@ class ProsesPenilaianController extends Controller
             $nm =  $nilaiMeeting->range_nilai;
             $nk =  $nilaiKehadiran->range_nilai;
 
+
             $paramsPengajuan    = $this->getParamsKriteria($np);
             $paramsMeeting      = $this->getParamsKriteria($nm);
             $paramsKehadiran    = $this->getParamsKriteria($nk);
@@ -157,6 +187,13 @@ class ProsesPenilaianController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'judul_pengajuan' => 'required',
+            'pengajuan' => 'required',
+            'meeting' => 'required',
+            'kehadiran' => 'required',
+           
+        ]);
 
 
         try {
@@ -169,10 +206,9 @@ class ProsesPenilaianController extends Controller
                     $x = $this->getParamsKriteria($value->range_total);
                     if ($total <= $x) {
                         $nilai = new Nilai();
-                        $nilai->pengajuan_id = $request->judul_pengajuan;
-                        //    dd($request->judul_pengajuan);
-                        // dd( $nilai->pengajuans->karyawan_id);
-                        $nilai->karyawan_id = $nilai->pengajuans->karyawan_id;
+                        $nilai->pengajuan_id = $request->pengajuan_id;
+                     
+                        $nilai->karyawan_id = $request->karyawan_id;
                         $nilai->pengajuan = $request->pengajuan;
                         $nilai->meeting = $request->meeting;
                         $nilai->kehadiran = $request->kehadiran;
@@ -279,6 +315,9 @@ class ProsesPenilaianController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $nilai = Nilai::where('id', $id)->first();
+        $nilai->delete();
+
+        return back()->with('success', 'Nilai berhasil dihapus...');
     }
 }
